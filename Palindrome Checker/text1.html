@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Build a Roman Numeral Converter</title>
+    <link rel="stylesheet" href="style.css">
+    
+  </head>
+  <style>
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      width: 60%;
+      height: 400px;
+      background-color: white;
+      min-width: 300px;
+      max-width: 400px;
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .input-cont,
+    .submit-cont {
+      width: 100%;
+      height: 20%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div
+        class="input-cont"
+        style="
+          font-weight: bold;
+          font-family: Verdana, Geneva, Tahoma, sans-serif;
+        "
+      >
+        Palindrome Checker
+      </div>
+      <div class="input-cont">
+        <input
+          type="text"
+          id="text-input"
+          style="
+            outline: none;
+            border: none;
+            border-bottom: 1px black solid;
+            text-align: center;
+          "
+        />
+        <p id="result" style="height: 10px"></p>
+      </div>
+      <div class="submit-cont">
+        <button
+          id="check-btn"
+          style="
+            width: 100px;
+            height: 30px;
+            border: none;
+            color: white;
+            background-color: black;
+          "
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+
+    <script>
+      let result = document.getElementById("result");
+
+      document.getElementById("check-btn").addEventListener("click", () => {
+        let value = document.getElementById("text-input").value;
+
+        let valuee = value.replace(/[^a-zA-Z0-9]/g, "");
+
+        if (valuee === "" || valuee === null) {
+          result.textContent = "Please input a value";
+        }
+
+        if (valuee.length > 0) {
+          let reverseValue = [];
+          for (let i = valuee.length - 1; i >= 0; i--) {
+            reverseValue.push(valuee[i]);
+          }
+
+          let reverseValueStr = reverseValue.join("");
+                 
+          if (reverseValueStr.toLowerCase() === valuee.toLowerCase()) {
+            result.textContent = `${value} is a palindrome`;
+          } else {
+            result.textContent = `${value} is not a palindrome`;
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
