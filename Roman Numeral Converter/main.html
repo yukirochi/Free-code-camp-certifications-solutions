@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body
+    style="
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: black;
+      padding: none;
+      box-sizing: border-box;
+      overflow: hidden;
+    "
+  >
+    <div
+      style="
+        width: 300px;
+        height: 200px;
+        background-color: white;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+      "
+    >
+      <p style="font-size: large; font-family: sans-serif; font-weight: bold">
+        Roman Numeral Converter
+      </p>
+      <div style="display: flex">
+        <button
+          id="convert-btn"
+          style="
+            padding: 5px;
+            outline: none;
+            border: 1px solid black;
+            border-radius: 4px;
+          "
+        >
+          Convert</button
+        ><input
+          type="number"
+          id="number"
+          style="
+            padding: 5px;
+            width: 150px;
+            outline: none;
+            border: 1px solid black;
+            border-radius: 4px;
+          "
+        />
+      </div>
+      <p id="output" style="text-align: center; font-size: 13px"></p>
+    </div>
+
+    <script>
+      let output = document.getElementById("output");
+     
+
+      document.getElementById("convert-btn").addEventListener("click", () => {
+        let result = "";
+        let inputraw = document.getElementById("number").value;
+        let input = Number(inputraw);
+
+        const modify = (val, inp) => {
+          result += val;
+          input = input - inp;
+        };
+        const Converter = () => {
+          if (input >= 1000) modify("M", 1000);
+          if (input >= 900 && input < 1000) modify("CM", 900);
+          if (input >= 500 && input < 900) modify("D", 500);
+          if (input >= 400 && input < 500) modify("CD", 400);
+          if (input >= 100 && input < 400) modify("C", 100);
+          if (input >= 90 && input < 100) modify("XC", 90);
+          if (input >= 50 && input < 90) modify("L", 50);
+          if (input >= 40 && input < 50) modify("XL", 40);
+          if (input >= 10 && input < 40) modify("X", 10);
+          if (input >= 9 && input < 10) modify("IX", 9);
+          if (input >= 5 && input < 9) modify("V", 5);
+          if (input >= 4 && input < 5) modify("IV", 4);
+          if (input >= 1 && input < 4) modify("I", 1);
+          if (input !== 0) Converter();
+
+          output.textContent = result;
+        };
+
+        if (!inputraw) output.textContent = "Please enter a valid number";
+        if (input < 0)
+          output.textContent =
+            "Please enter a number greater than or equal to 1";
+        if (input > 3999){
+          output.textContent =
+            "Please enter a number less than or equal to 3999";
+            return
+        }
+        
+        Converter();
+        
+      });
+    </script>
+  </body>
+</html>
