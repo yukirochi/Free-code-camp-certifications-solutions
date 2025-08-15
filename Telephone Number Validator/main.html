@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body
+    style="
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background-color: rgb(41, 41, 41);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    "
+  >
+    <div
+      style="
+        width: 200px;
+        height: 375px;
+        background-color: white;
+        border: 10px solid black;
+        border-radius: 30px;
+        position: relative;
+        overflow: hidden;
+      "
+    >
+      <div
+        style="
+          width: 80px;
+          height: 20px;
+          background-color: black;
+          position: absolute;
+          transform: translateX(-50%);
+          left: 50%;
+          border-radius: 10px;
+          margin-top: 5px;
+        "
+      ></div>
+
+      <div
+        style="
+          width: 180px;
+          height: 200px;
+          position: absolute;
+          transform: translate(-50%, -50%);
+          top: 50%;
+          left: 50%;
+          margin-top: 10px;
+        "
+      >
+        <header
+          style="
+            text-align: center;
+            width: 100%;
+            height: 10px;
+            font-family: sans-serif;
+            font-size: 15px;
+            margin-bottom: 10px;
+            margin-top: 20px;
+            font-weight: bold;
+          "
+        >
+          Telephone Number Validator
+        </header>
+        <main
+          style="
+            width: 100%;
+            height: 280px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+          "
+        >
+          <div
+            style="
+              width: 100%;
+              height: 180px;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+            "
+          >
+            <input
+              id="user-input"
+              type="text"
+              style="
+                width: 80%;
+                outline: none;
+                border: none;
+                border-bottom: 1px solid black;
+                text-align: center;
+              "
+              placeholder="222-222-2222"
+            />
+            <p
+              id="results-div"
+              style="
+                text-align: center;
+                font-family: sans-serif;
+                font-size: 12px;
+                width: 90%;
+                height: 20px;
+              "
+            >
+              Invalid US number: 2 555-555-5555
+            </p>
+            <div
+              style="
+                width: 100%;
+                height: 50px;
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+              "
+            >
+              <button
+                id="check-btn"
+                style="
+                  width: 60px;
+                  height: 20px;
+                  border: none;
+                  background-color: black;
+                  color: white;
+                "
+              >
+                Check
+              </button>
+              <button
+                id="clear-btn"
+                style="
+                  width: 60px;
+                  height: 20px;
+                  border: none;
+                  background-color: black;
+                  color: white;
+                "
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      let regOne = /^\d{1} \d{3}-\d{3}-\d{4}$/; // for 1 222-222-2222
+      let regTwo = /^\d{1} \(\d{3}\) \d{3}-\d{4}$/; // for 1 (222) 222-2222
+      let regThree = /^\d{1}\(\d{3}\)\d{3}-\d{4}$/; // for 1(222)222-2222
+      let regSix = /^\d{1} \d{3} \d{3} \d{4}$/; // for 1 222 222 2222
+      let result = document.getElementById("results-div");
+      let regFour = /^\d{3}-\d{3}-\d{4}$/; //for 222-222-2222
+      let regFive = /^\(\d{3}\)\d{3}-\d{4}$/; //for (222)222-2222
+      let reg10 = /^\d{10}$/;
+
+      const ten = (num, nums) => {
+        result.textContent = "";
+        if (regFour.test(num)) {
+          result.textContent = `Valid US number: ${num}`;
+          return;
+        }
+        if (regFive.test(num)) {
+          result.textContent = `Valid US number: ${num}`;
+          return;
+        }
+        if (reg10.test(num)) {
+          result.textContent = `Valid US number: ${num}`;
+          return;
+        } else {
+          result.textContent = `Invalid US number: ${num}`;
+        }
+      };
+
+      const eleven = (num) => {
+        result.textContent = "";
+        if (num[0] !== "1") {
+          result.textContent = `Invalid US number: ${num}`;
+          return;
+        }
+        if (regOne.test(num)) {
+          result.textContent = `Valid US number: ${num}`;
+          return;
+        }
+        if (regTwo.test(num)) {
+          result.textContent = `Valid US number: ${num}`;
+          return;
+        }
+        if (regSix.test(num)) {
+          result.textContent = `Valid US number: ${num}`;
+          return;
+        }
+        if (regThree.test(num)) {
+          result.textContent = `Valid US number: ${num}`;
+          return;
+        } else {
+          result.textContent = `Invalid US number: ${num}`;
+          return;
+        }
+      };
+
+      document.getElementById("check-btn").addEventListener("click", () => {
+        let num = document.getElementById("user-input").value;
+        let nums = num.replace(/[^a-zA-Z0-9]/g, "");
+
+        if (num.length === 0) {
+          alert("Please provide a phone number");
+          return;
+        }
+
+        if (nums.length !== 11 && nums.length !== 10) {
+          result.textContent = `Invalid US number: ${num}`;
+          return;
+        }
+
+        if (nums.length === 10) {
+          ten(num, nums);
+        } else if (nums.length === 11) {
+          eleven(num);
+        } else {
+          result.textContent = "Please provide a phone number";
+        }
+      });
+
+      document.getElementById("clear-btn").addEventListener("click", () => {
+        result.textContent = "";
+      });
+    </script>
+  </body>
+</html>
