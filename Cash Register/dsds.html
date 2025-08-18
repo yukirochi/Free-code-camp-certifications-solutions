@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      let payment = 500;
+      let price = 15;
+      let raw_change = payment - price;
+      let change = raw_change;
+      console.log(change);
+      let total = 0;
+      let money_obj = {};
+      let items = [];
+      let change_status = [];
+      let money = [
+        "penny",
+        "nickel",
+        "dime",
+        "quarter",
+        "dollar",
+        "five",
+        "ten",
+        "twenty",
+        "hundred",
+      ];
+      let cid = [
+        { money: "Penny", amount: 0.25, value: 0.01 }, // 0.01 * 25
+        { money: "Nickel", amount: 0.3, value: 0.05 }, // 0.05 * 6
+        { money: "Dime", amount: 0.3, value: 0.1 }, // 0.1 * 3
+        { money: "Quarter", amount: 1, value: 0.25 }, // 0.25 * 4
+        { money: "Dollar", amount: 3, value: 1 }, // 1 * 3
+        { money: "Five Dollars", amount: 35, value: 5 }, // 5 * 7
+        { money: "Ten Dollars", amount: 80, value: 10 }, // 10 * 8
+        { money: "Twenty Dollars", amount: 40, value: 20 }, // 20 * 2
+        { money: "One Hundred Dollars", amount: 100, value: 100 }, // 100 * 1
+      ];
+      cid.forEach((amount) => {
+        total = total + amount.amount;
+      });
+      const throwMessage = (msg) => {
+        console.log(msg);
+      };
+      const CheckAmountStatus = () => {
+        if (raw_change > total) {
+          throwMessage("Status: INSUFFICIENT_FUNDS");
+          return
+        } else if (change === total) {
+          throwMessage("Status: CLOSED");
+          return
+        } else if(total > raw_change) {
+          throwMessage("Status: OPEN");
+        }
+      };
+      CheckAmountStatus();
+     
+      const CheckAmount = () => {
+        if (payment < price) {
+          throwMessage(
+            "Customer does not have enough money to purchase the item"
+          );
+          return;
+        } else if (payment < price) {
+          throwMessage("No change due - customer paid with exact cash");
+          return;
+        } else {
+          throwMessage("Status: OPEN");
+          return;
+        }
+      };
+      money.forEach((element, key) => {
+        money_obj[element] = () => {
+          change = change - cid[key].value;
+          cid[key].amount = cid[key].amount - cid[key].value;
+          items.push({ money: cid[key].money, value: cid[key].value });
+          return;
+        };
+      });
+
+      /*const process = () =>{
+          if(change >= 100 && cid[8].amount !== 0){
+            money_obj.hundred()
+          }
+         
+          if(change >= 1 && cid[4].amount !== 0){
+            money_obj.dollar()
+            return process()
+          }
+           if(change >= 0.25 && change < 1 && cid[3].amount !== 0){
+            money_obj.quarter()
+            return process()
+          }
+           if(change >= 0.1 &&  change < 0.25 && cid[2].amount !== 0){
+            money_obj.dime()
+             return process()
+          }
+           if(change >= 0.05 && change < 0.1 && cid[1].amount !== 0){
+            money_obj.nickel()
+             return process()
+          }
+          if(change >=  0.01 && change < 0.05 && cid[0].amount !== 0){
+            money_obj.penny()
+             return process()
+          }
+
+        
+
+      }
+      process()*/
+
+      const process = () => {
+        if (!process.called) {
+          CheckAmount();
+          process.called = true;
+        }
+
+        if (change === 0) {
+          return;
+        }
+        cid.forEach((element, key) => {
+          if (change >= element.value && change < cid[key + 1].value) {
+            if (element.amount === 0 && key !== 0) {
+              money_obj[money[key - 1]]();
+              return process();
+            }
+            money_obj[money[key]]();
+            return process();
+          }
+        });
+      };
+      process();
+
+      let objitems = {};
+
+      items.forEach((item) => {
+        if (!objitems[item.money]) {
+          objitems[item.money] = { money: item.money, value: 0 };
+        }
+        objitems[item.money].value += item.value;
+      });
+
+      let result = Object.values(objitems);
+      result.forEach((element) => {
+        console.log(element.money + ":" + element.value);
+      });
+      console.log("total change :" + raw_change);
+    </script>
+  </body>
+</html>
