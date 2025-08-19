@@ -9,7 +9,8 @@
     <script>
       let payment = 50;
       let price = 5.21;
-      let change = payment - price;
+      let change = 51;
+      
       let displayObj = {};
       let cid = [
         { money: "Penny", amount: 20, value: 0.01 }, // 0.01 * 25
@@ -49,52 +50,47 @@
         }
       };
       let count = 0;
-      const Calculate = () => {
 
+      while (change > 0) {
         count++;
         if (change >= 100) {
           change = change - cid[8].value;
           Subtract(cid[8]);
-          return Calculate();
         } else if (change >= 20 && change < 100) {
           change = change - cid[7].value;
           Subtract(cid[7]);
-          return Calculate();
+
         } else if (change >= 10 && change < 20) {
           change = change - cid[6].value;
           Subtract(cid[6]);
-          return Calculate();
+
         } else if (change >= 5 && change < 10) {
           change = change - cid[5].value;
           Subtract(cid[5]);
-          return Calculate();
+
         } else if (change >= 1 && change < 5) {
           change = change - cid[4].value;
           Subtract(cid[4]);
-          return Calculate();
+
         } else if (change >= 0.25 && change < 1) {
           change = change - cid[3].value;
           Subtract(cid[3]);
-          return Calculate();
+     
         } else if (change >= 0.1 && change < 0.25) {
           change = change - cid[2].value;
           Subtract(cid[2]);
-          return Calculate();
+       
         } else if (change >= 0.05 && change < 0.1) {
           change = change - cid[1].value;
           Subtract(cid[1]);
-          return Calculate();
+
         } else if (change >= 0.01 && change < 0.05) {
           change = change - cid[0].value;
           Subtract(cid[0]);
-          return Calculate();
+       
         }
-
-        if (change === 0) {
-          console.log("Status: Closed");
-        }
-      };
-      Calculate();
+        
+      }
 
       console.log(count);
       Object.values(displayObj).forEach((element) => {

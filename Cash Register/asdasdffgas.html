@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .receipt {
+        width: 250px;
+        background: white;
+        border: 2px dashed #ccc;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .shop-name {
+        font-size: 1.2rem;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .info {
+        text-align: center;
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+      }
+
+      .receipt table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+        font-size: 0.85rem;
+      }
+
+      .receipt table th,
+      .receipt table td {
+        padding: 4px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+      }
+
+      .total {
+        display: flex;
+        justify-content: space-between;
+        font-size: 1rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+      }
+
+      .barcode {
+        display: flex;
+        justify-content: center;
+        margin-top: 15px;
+      }
+
+      .thanks {
+        font-size: 0.85rem;
+        text-align: center;
+        margin-top: 10px;
+      }
+      input::placeholder {
+        color: black;
+        font-weight: bold;
+        opacity: 0.8;
+      }
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body
+    style="
+      width: 100vw;
+      height: 100vh;
+      background-color: rgb(61, 61, 61);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      flex-direction: column;
+    "
+  >
+    <div class="receipt">
+      <p class="shop-name">Market</p>
+      <p class="info">
+        1234 Market Street, Suite 101<br />
+        City, State ZIP<br />
+        <span style="font-weight: bold; font-size: large">Your bill</span><br />
+        <span id="status">15632</span>
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Total :</th>
+            <th><span id="price"></span></th>
+            <th></th>
+          </tr>
+        </thead>
+      </table>
+      <div id="change-due" style="width: 80%"></div>
+
+      <div class="total">
+        <p>Your change:</p>
+        <p id="change"></p>
+      </div>
+
+      <p class="thanks">Thank you for shopping with us!</p>
+    </div>
+
+    <div
+      style="
+        width: 300px;
+        height: 300px;
+        background-color: rgb(36, 36, 36);
+        margin-top: -8px;
+        border-radius: 5px;
+        border: 3px solid black;
+      "
+    >
+      <div
+        style="
+          width: 100%;
+          height: 50px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        "
+      >
+        <input
+          id="cash"
+          type="number"
+          style="
+            outline: none;
+            width: 90%;
+            height: 50%;
+            border: 4px solid black;
+            text-align: center;
+            background-color: rgb(92, 112, 92);
+            color: black;
+            font-weight: bold;
+          "
+          placeholder=" Enter Your Payment Here"
+        />
+      </div>
+      <div
+        style="
+          width: 100%;
+          height: 25px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        "
+      >
+        <button
+          id="purchase-btn"
+          style="
+            width: 30%;
+            font-weight: bold;
+            background-color: rgb(16, 36, 16);
+            color: rgb(0, 0, 0);
+          "
+        >
+          PAY
+        </button>
+      </div>
+      <div
+        style="
+          width: 100%;
+          height: 70%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        "
+      >
+        <table style="font-size: 15px">
+          <thead>
+            <tr></tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      let price = 19.5;
+      let displayObj = [];
+      let change_due = document.getElementById("change-due");
+      document.getElementById("price").textContent = price;
+
+      let cid = [
+        { money: "Penny", amount: 20, value: 0.01, multi: 1, deducted: 0 },
+        { money: "Nickel", amount: 15, value: 0.05, multi: 5, deducted: 0 },
+        { money: "Dime", amount: 50, value: 0.1, multi: 10, deducted: 0 },
+        { money: "Quarter", amount: 15, value: 0.25, multi: 25, deducted: 0 },
+        { money: "Dollar", amount: 10, value: 1, multi: 100, deducted: 0 },
+        { money: "Five Dollars", amount: 8, value: 5, multi: 500, deducted: 0 },
+        {
+          money: "Ten Dollars",
+          amount: 5,
+          value: 10,
+          multi: 1000,
+          deducted: 0,
+        },
+        {
+          money: "Twenty Dollars",
+          amount: 3,
+          value: 20,
+          multi: 2000,
+          deducted: 0,
+        },
+        {
+          money: "One Hundred Dollars",
+          amount: 2,
+          value: 100,
+          multi: 10000,
+          deducted: 0,
+        },
+      ];
+      let cidcopy = cid.map((obj) => ({ ...obj }));
+      const CalculateTotalcash = () => {
+        let cash = 0;
+        cid.forEach((element) => {
+          cash += element.value * element.amount;
+        });
+        return cash;
+      };
+      let totalCash = CalculateTotalcash();
+
+      function processPayment(change) {
+        displayObj = [];
+        while (change > 0) {
+          for (let i = cidcopy.length - 1; i >= 0; i--) {
+            if (i === cidcopy.length - 1) {
+              if (change >= cidcopy[i].multi) {
+                cidcopy[i].amount -= 1;
+                cidcopy[i].deducted += 1;
+                change = Math.round((change -= cidcopy[i].multi));
+              }
+            } else {
+              if (change >= cidcopy[i].multi && change < cidcopy[i + 1].multi) {
+                cidcopy[i].amount -= 1;
+                cidcopy[i].deducted += 1;
+                change = Math.round((change -= cidcopy[i].multi));
+              }
+            }
+          }
+        }
+        cidcopy.forEach((element, key) => {
+          if (element.amount !== cid[key].amount) {
+            displayObj.push(element);
+          }
+        });
+
+        change_due.innerHTML = "Status: OPEN";
+        displayObj
+          .slice()
+          .reverse()
+          .forEach((element) => {
+            change_due.innerHTML += `<p>${element.money.toUpperCase()}: $${(
+              element.value * element.deducted
+            ).toFixed(2)}</p>`;
+          });
+
+        displaycurrent();
+      }
+
+      let tbody = document.getElementById("tbody");
+      tbody.innerHTML = "";
+
+      document.getElementById("purchase-btn").addEventListener("click", () => {
+        let payment = document.getElementById("cash").value;
+        let raw_change = payment - price;
+        let change = Math.round(raw_change * 100);
+        let changedue = change / 100;
+
+        if (changedue < 0) {
+          changedue = "";
+        }
+
+        document.getElementById("change").textContent = changedue;
+        if (price > payment) {
+          alert("Customer does not have enough money to purchase the item");
+          change_due.textContent = "";
+          change_due.textContent = "Status: INSUFFICIENT_FUNDS";
+        } else if (
+          payment === price ||
+          Math.round(raw_change * 100) / 100 === 0
+        ) {
+          alert("No change due - customer paid with exact cash");
+          change_due.textContent = "";
+          change_due.textContent =
+            "No change due - customer paid with exact cash";
+        } else {
+          let newchange = change / 100;
+          if (newchange > totalCash) {
+            change_due.textContent = "";
+            change_due.textContent = "Status: INSUFFICIENT_FUNDS";
+          } else if (newchange === totalCash) {
+            change_due.textContent = "";
+            change_due.textContent = "Status: CLOSED";
+          } else if (newchange < totalCash) {
+            processPayment(change);
+          }
+        }
+      });
+
+      const displaycurrent = () => {
+        tbody.innerHTML = ``;
+        cidcopy.forEach((element) => {
+          tbody.innerHTML += `
+    <tr>
+      <td >${element.money}</td>
+      <td> : $${(element.amount * element.value).toFixed(2)}</td>
+    </tr>`;
+        });
+      };
+      displaycurrent();
+    </script>
+  </body>
+</html>
