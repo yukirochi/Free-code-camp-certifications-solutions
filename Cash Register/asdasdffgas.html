@@ -89,7 +89,8 @@
       <p class="info">
         1234 Market Street, Suite 101<br />
         City, State ZIP<br />
-        <span style="font-weight: bold; font-size: large">Your bill</span><br />
+        <span style="font-weight: bold; font-size: large">Your bill id:</span
+        ><br />
         <span id="status">15632</span>
       </p>
 
@@ -106,7 +107,7 @@
 
       <div class="total">
         <p>Your change:</p>
-        <p id="change"></p>
+        <p id="change">0</p>
       </div>
 
       <p class="thanks">Thank you for shopping with us!</p>
@@ -188,138 +189,115 @@
 
     <script>
       let price = 19.5;
-      let displayObj = [];
-      let change_due = document.getElementById("change-due");
-      document.getElementById("price").textContent = price;
-
       let cid = [
-        { money: "Penny", amount: 20, value: 0.01, multi: 1, deducted: 0 },
-        { money: "Nickel", amount: 15, value: 0.05, multi: 5, deducted: 0 },
-        { money: "Dime", amount: 50, value: 0.1, multi: 10, deducted: 0 },
-        { money: "Quarter", amount: 15, value: 0.25, multi: 25, deducted: 0 },
-        { money: "Dollar", amount: 10, value: 1, multi: 100, deducted: 0 },
-        { money: "Five Dollars", amount: 8, value: 5, multi: 500, deducted: 0 },
-        {
-          money: "Ten Dollars",
-          amount: 5,
-          value: 10,
-          multi: 1000,
-          deducted: 0,
-        },
-        {
-          money: "Twenty Dollars",
-          amount: 3,
-          value: 20,
-          multi: 2000,
-          deducted: 0,
-        },
-        {
-          money: "One Hundred Dollars",
-          amount: 2,
-          value: 100,
-          multi: 10000,
-          deducted: 0,
-        },
+        ["PENNY", 0.01],
+        ["NICKEL", 0],
+        ["DIME", 0],
+        ["QUARTER", 0],
+        ["ONE", 1],
+        ["FIVE", 0],
+        ["TEN", 0],
+        ["TWENTY", 0],
+        ["ONE HUNDRED", 0],
       ];
-      let cidcopy = cid.map((obj) => ({ ...obj }));
-      const CalculateTotalcash = () => {
-        let cash = 0;
-        cid.forEach((element) => {
-          cash += element.value * element.amount;
-        });
-        return cash;
-      };
-      let totalCash = CalculateTotalcash();
 
-      function processPayment(change) {
-        displayObj = [];
-        while (change > 0) {
-          for (let i = cidcopy.length - 1; i >= 0; i--) {
-            if (i === cidcopy.length - 1) {
-              if (change >= cidcopy[i].multi) {
-                cidcopy[i].amount -= 1;
-                cidcopy[i].deducted += 1;
-                change = Math.round((change -= cidcopy[i].multi));
-              }
-            } else {
-              if (change >= cidcopy[i].multi && change < cidcopy[i + 1].multi) {
-                cidcopy[i].amount -= 1;
-                cidcopy[i].deducted += 1;
-                change = Math.round((change -= cidcopy[i].multi));
-              }
-            }
-          }
-        }
-        cidcopy.forEach((element, key) => {
-          if (element.amount !== cid[key].amount) {
-            displayObj.push(element);
-          }
-        });
+      const denominations = [
+        ["PENNY", 1],
+        ["NICKEL", 5],
+        ["DIME", 10],
+        ["QUARTER", 25],
+        ["ONE", 100],
+        ["FIVE", 500],
+        ["TEN", 1000],
+        ["TWENTY", 2000],
+        ["ONE HUNDRED", 10000],
+      ];
 
-        change_due.innerHTML = "Status: OPEN";
-        displayObj
-          .slice()
-          .reverse()
-          .forEach((element) => {
-            change_due.innerHTML += `<p>${element.money.toUpperCase()}: $${(
-              element.value * element.deducted
-            ).toFixed(2)}</p>`;
-          });
+      document.getElementById("price").textContent = price;
+      const change_due = document.getElementById("change-due");
+      const tbody = document.getElementById("tbody");
 
-        displaycurrent();
-      }
-
-      let tbody = document.getElementById("tbody");
-      tbody.innerHTML = "";
-
-      document.getElementById("purchase-btn").addEventListener("click", () => {
-        let payment = document.getElementById("cash").value;
-        let raw_change = payment - price;
-        let change = Math.round(raw_change * 100);
-        let changedue = change / 100;
-
-        if (changedue < 0) {
-          changedue = "";
-        }
-
-        document.getElementById("change").textContent = changedue;
-        if (price > payment) {
-          alert("Customer does not have enough money to purchase the item");
-          change_due.textContent = "";
-          change_due.textContent = "Status: INSUFFICIENT_FUNDS";
-        } else if (
-          payment === price ||
-          Math.round(raw_change * 100) / 100 === 0
-        ) {
-          alert("No change due - customer paid with exact cash");
-          change_due.textContent = "";
-          change_due.textContent =
-            "No change due - customer paid with exact cash";
-        } else {
-          let newchange = change / 100;
-          if (newchange > totalCash) {
-            change_due.textContent = "";
-            change_due.textContent = "Status: INSUFFICIENT_FUNDS";
-          } else if (newchange === totalCash) {
-            change_due.textContent = "";
-            change_due.textContent = "Status: CLOSED";
-          } else if (newchange < totalCash) {
-            processPayment(change);
-          }
-        }
-      });
 
       const displaycurrent = () => {
         tbody.innerHTML = ``;
-        cidcopy.forEach((element) => {
+        cid.forEach((element) => {
           tbody.innerHTML += `
-    <tr>
-      <td >${element.money}</td>
-      <td> : $${(element.amount * element.value).toFixed(2)}</td>
-    </tr>`;
+      <tr>
+        <td>${element[0]}</td>
+        <td>: $${element[1].toFixed(2)}</td>
+      </tr>`;
         });
       };
       displaycurrent();
+
+      function CalculateChange(raw_change, drawer) {
+        let changeDue = Math.round(raw_change * 100); 
+        let totalCid = Math.round(
+          drawer.reduce((sum, m) => sum + m[1], 0) * 100
+        );
+        let changeArr = [];
+
+
+        for (let i = denominations.length - 1; i >= 0; i--) {
+          let coinName = denominations[i][0];
+          let coinVal = denominations[i][1];
+          let drawerAmt = Math.round(drawer[i][1] * 100);
+          let toGive = 0;
+
+          while (changeDue >= coinVal && drawerAmt > 0) {
+            changeDue -= coinVal;
+            drawerAmt -= coinVal;
+            toGive += coinVal;
+          }
+
+          if (toGive > 0) {
+            changeArr.push([coinName, toGive / 100]);
+          }
+        }
+
+
+        if (changeDue > 0) {
+          change_due.textContent = "Status: INSUFFICIENT_FUNDS";
+          return false;
+        }
+
+
+        if (Math.round(raw_change * 100) === totalCid) {
+          change_due.innerHTML =
+            "Status: CLOSED " +
+            changeArr.map(([name, amt]) => `${name}: $${amt}`).join(" ");
+          return true;
+        }
+
+    
+        change_due.innerHTML =
+          "Status: OPEN " +
+          changeArr.map(([name, amt]) => `${name}: $${amt}`).join(" ");
+        return true;
+      }
+
+      document.getElementById("purchase-btn").addEventListener("click", () => {
+        let payment = Number(document.getElementById("cash").value);
+        let raw_change = payment - price;
+        let change = Math.round(raw_change * 100) / 100;
+        document.getElementById("change").textContent = change.toFixed(2);
+
+        if (payment < price) {
+          alert("Customer does not have enough money to purchase the item");
+          return;
+        }
+        if (Math.abs(raw_change) < 0.001) {
+          change_due.textContent =
+            "No change due - customer paid with exact cash";
+          return;
+        }
+
+        let drawerCopy = cid.map((c) => [...c]);
+        let success = CalculateChange(raw_change, drawerCopy);
+        if (!success) return;
+        displaycurrent();
+      });
     </script>
+  
   </body>
 </html>
