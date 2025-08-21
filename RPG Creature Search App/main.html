@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+        .input-container {
+  width: 220px;
+  position: relative;
+}
+
+.icon {
+  position: absolute;
+  right: 0px;
+  top: calc(50% + 5px);
+  transform: translateY(calc(-50% - 5px));
+  background-color: white;
+  border: none;
+}
+
+.input {
+  width: 100%;
+  height: 15px;
+  padding: 10px;
+  transition: .2s linear;
+  border: 2.5px solid black;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.input:focus {
+  outline: none;
+  border: 0.5px solid black;
+  box-shadow: 5px 5px 0px black;
+}
+
+.input-container:hover > .icon {
+  animation: anim 1s linear infinite;
+}
+
+@keyframes anim {
+  0%,
+  100% {
+    transform: translateY(calc(-50% - 5px)) scale(1);
+  }
+
+  50% {
+    transform: translateY(calc(-50% - 5px)) scale(1.1);
+  }
+}
+    </style>
+  </head>
+  <body style="width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center;">
+    
+    <div style="width: 350px; height: 500px; border: 1px solid black; box-shadow: 5px 10px #000000;">
+        <header style="width: 100%; height: 20%; display: flex; justify-content: center; align-items: center;">
+            <div class="input-container">
+  <input id="search-input" type="text" name="text" class="input" placeholder="search..." required>
+  <button id="search-button" class="icon"> 
+    <svg width="19px" height="19px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path opacity="1" d="M14 5H20" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path opacity="1" d="M14 8H17" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M21 11.5C21 16.75 16.75 21 11.5 21C6.25 21 2 16.75 2 11.5C2 6.25 6.25 2 11.5 2" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path> <path opacity="1" d="M22 22L20 20" stroke="#000" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+  </button>
+</div>
+
+        </header>
+<div style="width: 100%; height: 8%; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+             <p><span id="creature-name" style="font-weight: bold; text-transform: uppercase; font-family: sans-serif;">name</span> <span id="creature-id">2</span></p>
+            <p>weight: <span id="weight">32</span> height: <span id="height">32</span> types: <span id="types">32</span></p>
+          </div>
+                     <div style="width: 100%; height: 70%;  display: flex; justify-content: center; text-align: center; flex-direction: column;">
+                         <div style="width: 95%; height: 20%; font-size: 12px;">
+                            <p id="special-name">attack name</p>
+                            <p id="special-description">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ea ratione reiciendis aut recusandae repellat sint dolorum corrupti</p>
+                         </div> 
+                         <div style="width: 100%; height: 10%; display: flex; justify-content: space-around; align-items: center;">
+                            <div style="width: 70%; height: 90%; border: 1px solid black; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <p >hp</p>
+                            </div>
+                                <div style="width: 20%; height: 90%; border: 1px solid black; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <p id="hp">100</p>
+                            </div>
+                         </div>
+                         <div style="width: 100%; height: 10%; display: flex; justify-content: space-around; align-items: center;">
+                            <div style="width: 70%; height: 90%; border: 1px solid black; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <p >attack</p>
+                            </div>
+                                <div style="width: 20%; height: 90%; border: 1px solid black; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <p id="attack">100</p>
+                            </div>
+                         </div>          
+                          <div style="width: 100%; height: 10%; display: flex; justify-content: space-around; align-items: center;">
+                            <div style="width: 70%; height: 90%; border: 1px solid black; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <p >defense</p>
+                            </div>
+                                <div style="width: 20%; height: 90%; border: 1px solid black; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <p id="defense">100</p>
+                            </div>
+                         </div>        
+                         <div style="width: 100%; height: 10%; display: flex; justify-content: space-around; align-items: center;">
+                            <div style="width: 70%; height: 90%; border: 1px solid black; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <p >Special attack</p>
+                            </div>
+                                <div style="width: 20%; height: 90%; border: 1px solid black; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <p id="special-attack">100</p>
+                            </div>
+                         </div>  
+                          <div style="width: 100%; height: 10%; display: flex; justify-content: space-around; align-items: center;">
+                            <div style="width: 70%; height: 90%; border: 1px solid black; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <p >special defense</p>
+                            </div>
+                                <div style="width: 20%; height: 90%; border: 1px solid black; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <p id="special-defense">100</p>
+                            </div>
+                         </div>  
+                         <div style="width: 100%; height: 10%; display: flex; justify-content: space-around; align-items: center;">
+                            <div style="width: 70%; height: 90%; border: 1px solid black; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <p >speed</p>
+                            </div>
+                                <div style="width: 20%; height: 90%; border: 1px solid black; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <p id="speed">100</p>
+                            </div>
+                         </div> 
+
+                     </div>
+    </div>
+    <script>
+      const creatureID = document.getElementById('creature-id');
+const creatureName = document.getElementById('creature-name');
+const specialName = document.getElementById('special-name');
+const specialDescription = document.getElementById('special-description');
+const types = document.getElementById('types');
+const height = document.getElementById('height');
+const weight = document.getElementById('weight');
+const hp = document.getElementById('hp');
+const attack = document.getElementById('attack');
+const defense = document.getElementById('defense');
+const specialAttack = document.getElementById('special-attack');
+const specialDefense = document.getElementById('special-defense');
+const speed = document.getElementById('speed');
+const button = document.getElementById('search-button');
+
+
+
+      const getdata = async (creature) => {
+        try{
+ let creatureInfo = creature.toString().toLowerCase();
+        let res = await fetch(
+          `https://rpg-creature-api.freecodecamp.rocks/api/creature/${creatureInfo}`
+        );
+        let data = await res.json();
+
+        creatureName.textContent = `${data.name.toUpperCase()}`;
+    creatureID.textContent = `#${data.id}`;
+    weight.textContent = `Weight: ${data.weight}`;
+    height.textContent = `Height: ${data.height}`;
+    specialName.textContent = data.special.name;
+    specialDescription.textContent = data.special.description;
+
+
+    hp.textContent = data.stats[0].base_stat;
+    attack.textContent = data.stats[1].base_stat;
+    defense.textContent = data.stats[2].base_stat;
+    specialAttack.textContent = data.stats[3].base_stat;
+    specialDefense.textContent = data.stats[4].base_stat;
+    speed.textContent = data.stats[5].base_stat;
+
+    types.innerHTML = data.types
+      .map(obj => `<span class="type ${obj.name}">${obj.name}</span>`)
+      .join('');
+        }catch{
+            reset();
+           alert("Creature not found")
+        }
+       
+      };
+    const reset = () => {
+  creatureName.textContent = '';
+  creatureID.textContent = '';
+  height.textContent = '';
+  weight.textContent = '';
+  types.innerHTML = '';
+  specialName.innerHTML = '';
+  specialDescription.innerHTML = '';
+  hp.textContent = '';
+  attack.textContent = '';
+  defense.textContent = '';
+  specialAttack.textContent = '';
+  specialDefense.textContent = '';
+  speed.textContent = '';
+};
+
+
+button.addEventListener("click",()=>{
+const searchInput = document.getElementById('search-input').value;
+getdata(searchInput)
+})
+
+
+    </script>
+  </body>
+</html>
